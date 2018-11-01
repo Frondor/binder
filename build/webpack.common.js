@@ -9,7 +9,7 @@ const plugins = [];
 
 module.exports = {
   entry: {
-    [libName]: "./src/index.js"
+    [libName]: "./src/ServiceContainer.js"
   },
   output: {
     path: path.resolve(__dirname, "../dist"),
