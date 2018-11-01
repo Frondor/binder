@@ -3,10 +3,6 @@ import ServiceContainer from "../src/ServiceContainer";
 class Country {
   constructor(TLD) {
     this.TLD = TLD;
-
-    setTimeout(() => {
-      this.time = new Date().getTime();
-    });
   }
 }
 

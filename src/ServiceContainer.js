@@ -15,29 +15,18 @@ export default class ServiceContainer {
   }
 
   get(key) {
-    if (!this.bindings[key]) throw new Error(key + " is not bound"); // to-do typed error
+    if (!this.bindings[key]) throw new ReferenceError(key + " is not bound");
     return this._resolveBinding(key);
   }
 
   _define(key, resolver, type) {
-    const descriptor = {
-      configurable: true, // so it can be unbound
-      enumerable: true // so it can be deconstructed
-    };
-
     this.bindings[key] = new Binding(this, type, key, resolver);
-    switch (type) {
-      case Binding.types.INSTANCE:
-        descriptor.value = resolver;
-        break;
-      case Binding.types.CLASS:
-      case Binding.types.SINGLETON:
-      default:
-        descriptor.get = () => this._resolveBinding(key);
-        break;
-    }
 
-    Object.defineProperty(this.injector, key, descriptor);
+    Object.defineProperty(this.injector, key, {
+      configurable: true, // so it can be unbound
+      enumerable: true, // so it can be deconstructed
+      get: () => this.get(key)
+    });
   }
 
   bind(key, resolver) {
