@@ -4,29 +4,6 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const pkg = require("../package.json");
 const common = require("./webpack.common");
 
-const optionalCSS = [];
-
-if (pkg.devDependencies["css-loader"]) {
-  const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-  const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-  const sass = require("./webpack.sass");
-
-  const optimizeCSS = {
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true // set to true if you want JS source maps
-        }),
-        new OptimizeCSSAssetsPlugin({})
-      ]
-    }
-  };
-
-  optionalCSS.push(sass, optimizeCSS);
-}
-
 const prod = {
   mode: "production",
   devtool: "source-map",
@@ -37,7 +14,7 @@ const prod = {
   ]
 };
 
-const WebConfig = merge.smart(common, prod, ...optionalCSS);
+const WebConfig = merge.smart(common, prod);
 const NodeConfig = merge.smart(WebConfig, {
   target: "node"
 });

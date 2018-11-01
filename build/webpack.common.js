@@ -1,4 +1,3 @@
-const fs = require("fs");
 const path = require("path");
 const pkg = require("../package.json");
 
@@ -7,17 +6,6 @@ const libName = pkg.name.replace(/[^a-z][a-z0-9]{1}/gi, (n, i, s) =>
 );
 
 const plugins = [];
-
-if (fs.existsSync(path.resolve(__dirname, "../dev/index.html"))) {
-  const HtmlWebpackPlugin = require("html-webpack-plugin");
-  plugins.push(
-    new HtmlWebpackPlugin({
-      title: "Development Workspace",
-      template: "./dev/index.html",
-      inject: "head"
-    })
-  );
-}
 
 module.exports = {
   entry: {
@@ -40,18 +28,6 @@ module.exports = {
           loader: "babel-loader"
         }
       }
-    ]
-  },
-  resolve: {
-    extensions: [
-      ".wasm",
-      ".mjs",
-      ".js",
-      ".json",
-      ".sass",
-      ".scss",
-      ".ts",
-      ".tsx"
     ]
   },
   externals: [
