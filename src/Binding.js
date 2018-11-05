@@ -1,4 +1,4 @@
-export default class Binding {
+class Binding {
   /**
    * Creates an instance of Binding.
    * @param {ServiceContainer} container
@@ -15,17 +15,38 @@ export default class Binding {
     this.isSingleton = type === Binding.types.SINGLETON;
   }
 
-  resolve() {
+  _checkAndReturnArgs(args) {
+    if (args && (!args.constructor || args.constructor.name !== "Array"))
+      throw new TypeError(
+        "[Container binding] Arguments must be passed as Array"
+      );
+    return args || [];
+  }
+
+  resolve(args) {
     let result;
     if (this.instance) result = this.instance;
     else if (this.isSingleton)
-      result = this.instance = this.resolver(this.container.injector);
-    else result = this.resolver(this.container.injector);
+      result = this.instance = this.resolver(
+        this.container.injector,
+        this._checkAndReturnArgs(args)
+      );
+    else
+      result = this.resolver(
+        this.container.injector,
+        this._checkAndReturnArgs(args)
+      );
 
     return result;
   }
-
-  static get types() {
-    return { CLASS: "class", INSTANCE: "instance", SINGLETON: "singleton" };
-  }
 }
+
+Object.defineProperty(Binding, "types", {
+  value: {
+    CLASS: 1,
+    INSTANCE: 2,
+    SINGLETON: 3
+  }
+});
+
+export default Binding;

@@ -10,13 +10,13 @@ export default class ServiceContainer {
     // same here but how to declare getter?
   }
 
-  _resolveBinding(key) {
-    return this.bindings[key].resolve();
+  _resolveBinding(key, args) {
+    return this.bindings[key].resolve(args);
   }
 
-  get(key) {
+  get(key, args) {
     if (!this.bindings[key]) throw new ReferenceError(key + " is not bound");
-    return this._resolveBinding(key);
+    return this._resolveBinding(key, args);
   }
 
   _define(key, resolver, type) {
@@ -29,6 +29,14 @@ export default class ServiceContainer {
     });
   }
 
+  /**
+   * Binds a class
+   *
+   * @param {*} key key to identify the service
+   * @param {*} resolver function to instruct the container how to instantiate the service
+   * @returns
+   * @memberof ServiceContainer
+   */
   bind(key, resolver) {
     if (typeof resolver !== "function") return this.instance(key, resolver);
     this._define(key, resolver, Binding.types.CLASS);

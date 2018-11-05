@@ -1,10 +1,10 @@
 {
-  "name": "servy",
+  "name": "binder",
   "version": "0.0.1",
-  "description": "",
+  "description": "Simple, yet powerful IoC container and service locator for both, the browser and node.",
   "private": false,
-  "main": "dist/servy.node.js",
-  "browser": "dist/servy.js",
+  "main": "dist/binder.node.js",
+  "browser": "dist/binder.js",
   "files": [
     "dist"
   ],
@@ -17,8 +17,8 @@
     "name": "Federico Vázquez (Frondor)",
     "url": "https://frondor.github.io"
   },
-  "repository": "https: //github.com/Frondor/javascript-library-boilerplate",
-  "homepage": "https://github.com/Frondor/javascript-library-boilerplate#readme",
+  "repository": "https://github.com/Frondor/binder",
+  "homepage": "https://github.com/Frondor/binder#readme",
   "license": "MIT",
   "sideEffects": false,
   "devDependencies": {
@@ -36,5 +36,10 @@
   "engines": {
     "node": ">= 8"
   },
-  "keywords": []
+  "keywords": [
+    "ioc",
+    "dependency injection",
+    "service locator",
+    "container"
+  ]
 }
