@@ -20,7 +20,6 @@ TBD
 
 It's pretty simple, you only need to create an instance of the [ServiceContainer](src/ServiceContainer.js) class and `import` it whenever you need.
 
-
 ## API
 
 ### <code>container.bind(string: key, <a href="#resolver-function">Function: resolver</a>)</code>
