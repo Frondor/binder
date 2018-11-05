@@ -4,6 +4,9 @@
   <a href="https://travis-ci.org/Frondor/binder">
     <img src="https://travis-ci.org/Frondor/binder.svg?branch=master" alt="Build Status">
   </a>
+  <a href="https://codecov.io/gh/Frondor/binder">
+    <img src="https://codecov.io/gh/Frondor/binder/branch/master/graph/badge.svg" />
+  </a>
   <a href="https://greenkeeper.io/">
     <img src="https://badges.greenkeeper.io/Frondor/binder.svg" alt="Greenkeeper badge">
   </a>
