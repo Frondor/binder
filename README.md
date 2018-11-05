@@ -73,8 +73,6 @@ container.get("storage", ["session"]);
 This object is passed as the first argument of every resolver function, but you can use it whenever you want to implement Dependency Injection.
 It uses property accesors to resolve its properties directly from the container (internally calling `container.get()`), and throw an error if they are not registered.
 
-TIP: Looks pretty with object destructuring ;)
-
 Example:
 
 ```js
@@ -106,4 +104,4 @@ app.get("/user/:id", controller.getUser);
 
 The resolver function instructs the container on how to create an object, returning a new instance of it.
 
-Note that it receives the [`container.injector`](#container.injector) as the first argument, so we can then use the container to resolve sub-dependencies of the object we are building, and an optional array of params as second argument (see `container.get`).
+Note that it receives the [`container.injector`](#containerinjector) as the first argument, so we can then use the container to resolve sub-dependencies of the object we are building, and an optional array of params as second argument (see `container.get`).
