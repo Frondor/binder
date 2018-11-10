@@ -1,6 +1,6 @@
 {
   "name": "binder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple, yet powerful IoC container and service locator for both, the browser and node.",
   "private": false,
   "main": "dist/binder.node.js",
@@ -39,9 +39,8 @@
   },
   "keywords": [
     "ioc",
-    "dependency injection",
-    "service locator",
-    "container",
-    "inversion of control"
+    "dependency-injection",
+    "service-locator",
+    "inversion-of-control"
   ]
 }

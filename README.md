@@ -2,16 +2,22 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/binder">
-    <img src="https://img.shields.io/npm/v/binder.svg?logo=npm" alt="npm version">
+    <img src="https://img.shields.io/npm/v/binder.svg" alt="npm version">
   </a>
   <a href="https://travis-ci.org/Frondor/binder">
-    <img src="https://img.shields.io/travis/Frondor/binder/master.svg?logo=travis" alt="Build Status">
+    <img src="https://img.shields.io/travis/Frondor/binder/master.svg" alt="Build Status">
   </a>
   <a href="https://codecov.io/gh/Frondor/binder">
-    <img src="https://img.shields.io/codecov/c/github/frondor/binder/master.svg?logo=codecov">
+    <img src="https://img.shields.io/codecov/c/github/frondor/binder/master.svg" alt="coverage">
+  </a>
+  <a href="https://bundlephobia.com/result?p=binder@latest">
+    <img src="https://img.shields.io/bundlephobia/minzip/binder.svg" alt="Package size">
   </a>
   <a href="https://greenkeeper.io/">
     <img src="https://badges.greenkeeper.io/Frondor/binder.svg" alt="Greenkeeper badge">
+  </a>
+  <a href="https://snyk.io/test/npm/binder">
+    <img src="https://snyk.io/test/npm/binder/badge.svg" alt="Known Vulnerabilities">
   </a>
 </p>
 
