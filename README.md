@@ -51,7 +51,7 @@ const container = new Binder();
 
 Here are some recipes you can use to see which kind of *powerful* things you can do this
 - [Use webpack's require.context to auto-load configuration files](https://gist.github.com/Frondor/122607d4df80b0659ae66489c0872e58)
-- [TO-DO] Auto-load files in Node and push them to the container
+- [TO-DO] Auto-load files in Node, and let the container resolve its services (service loader)
 
 ## API
 
