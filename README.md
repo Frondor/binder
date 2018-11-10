@@ -24,6 +24,13 @@
 Simple, yet powerful IoC container and service locator for both, the browser and node.
 Inspired by [Illuminate/Container](https://github.com/illuminate/container).
 
+## Table of contents
+
+1. [Installation](#installation)
+2. [Getting started](#getting-started)
+3. [Recipes]()
+4. [API]()
+
 ## Installation
 
 Run
@@ -40,6 +47,11 @@ It's pretty simple, you only need to create an instance of the [ServiceContainer
 import Binder from "binder";
 const container = new Binder();
 ```
+## Recipes
+
+Here are some recipes you can use to see which kind of *powerful* things you can do this
+- [Use webpack's require.context to auto-load configuration files](https://gist.github.com/Frondor/122607d4df80b0659ae66489c0872e58)
+- [TO-DO] Auto-load files in Node and push them to the container
 
 ## API
 
