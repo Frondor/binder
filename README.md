@@ -28,8 +28,8 @@ Inspired by [Illuminate/Container](https://github.com/illuminate/container).
 
 1. [Installation](#installation)
 2. [Getting started](#getting-started)
-3. [Recipes]()
-4. [API]()
+3. [Recipes](#recipes)
+4. [API](#api)
 
 ## Installation
 
