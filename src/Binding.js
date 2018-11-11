@@ -1,13 +1,5 @@
 class Binding {
-  /**
-   * Creates an instance of Binding.
-   * @param {ServiceContainer} container
-   * @param {String} type class, singleton, instance
-   * @param {String} name
-   * @param {*} resolver resolver function (or instance) with instructions on how to "make" the object
-   */
-  constructor(container, type, name, resolver) {
-    this.container = container;
+  constructor(type, name, resolver) {
     this.type = type; // class, singleton, instance
     this.name = name;
     this.resolver = resolver;
@@ -23,17 +15,17 @@ class Binding {
     return args || [];
   }
 
-  resolve(args) {
+  resolve(container, args) {
     let result;
     if (this.instance) result = this.instance;
     else if (this.isSingleton)
       result = this.instance = this.resolver(
-        this.container.injector,
+        container.injector,
         this._checkAndReturnArgs(args)
       );
     else
       result = this.resolver(
-        this.container.injector,
+        container.injector,
         this._checkAndReturnArgs(args)
       );
 

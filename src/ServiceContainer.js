@@ -8,11 +8,11 @@ export default class ServiceContainer {
 
   get(key, args) {
     if (!this.bindings[key]) throw new ReferenceError(key + " is not bound");
-    return this.bindings[key].resolve(args);
+    return this.bindings[key].resolve(this, args);
   }
 
   _define(key, resolver, type) {
-    this.bindings[key] = new Binding(this, type, key, resolver);
+    this.bindings[key] = new Binding(type, key, resolver);
 
     Object.defineProperty(this.injector, key, {
       configurable: true, // so it can be unbound
