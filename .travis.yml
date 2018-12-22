@@ -1,11 +1,13 @@
 language: node_js
 node_js:
-  - "node"
+  - "8.9"
 install:
-  - npm install -g codecov
+  - npm install -g codecov jest
 cache:
   directories:
     - "node_modules"
+env:
+  - NODE_ENV=test
 script:
-  - npx jest --coverage
+  - npm run coverage
   - codecov
