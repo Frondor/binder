@@ -1,6 +1,6 @@
-import Binding from "./Binding";
+const Binding = require("./Binding");
 
-export default class ServiceContainer {
+module.exports = class ServiceContainer {
   constructor() {
     this.bindings = {};
     this.injector = {};

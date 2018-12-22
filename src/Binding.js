@@ -41,4 +41,4 @@ Object.defineProperty(Binding, "types", {
   }
 });
 
-export default Binding;
+module.exports = Binding;

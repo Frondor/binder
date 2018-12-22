@@ -6,8 +6,6 @@ install:
 cache:
   directories:
     - "node_modules"
-env:
-  - NODE_ENV=test
 script:
   - npm run coverage
   - codecov
