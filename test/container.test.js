@@ -1,4 +1,4 @@
-import ServiceContainer from "../src/ServiceContainer";
+const ServiceContainer = require("../src/ServiceContainer");
 
 class Country {
   constructor(TLD) {
