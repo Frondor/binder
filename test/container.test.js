@@ -62,7 +62,7 @@ test("Method .singleton binds a class to be instantiated once for subsequent res
   expect(Uruguay === Uruguay2).toBe(true);
 });
 
-test("Method .get throws error for unregisted services", () => {
+test("Method .get throws error for unregistered services", () => {
   const container = new ServiceContainer();
 
   expect(() => container.get("Uruguay")).toThrowError("Uruguay is not bound");
@@ -70,7 +70,7 @@ test("Method .get throws error for unregisted services", () => {
 
 test("Method .get accepts array of params to provide resolver function with", () => {
   const container = new ServiceContainer();
-  container.singleton("Uruguay", (undefined, args) => {
+  container.singleton("Uruguay", (_, args) => {
     return new Country(...args);
   });
 
