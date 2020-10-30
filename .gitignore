@@ -1,5 +1,13 @@
-.DS_Store
-.vscode
-*.log
-node_modules
+# Coverage directory used by tools like istanbul
 coverage
+*.lcov
+.rpt2_cache
+
+# Dependency directories
+node_modules
+
+.vscode
+.DS_Store
+.eslintcache
+
+dist
