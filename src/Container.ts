@@ -1,4 +1,5 @@
 import Binding from './Binding'
+import { Resolvable } from './types'
 
 export default class Container {
   protected bindings = new Map()
@@ -52,7 +53,8 @@ export default class Container {
     throw new TypeError(`Can not resolve anything for ${key}`)
   }
 
-  get(key) {
+  get<T>(key: T): T extends new () => infer I ? I : unknown
+  get(key: any) { // eslint-disable-line
     const binding = this.resolve(key)
 
     if (binding) return binding

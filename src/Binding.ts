@@ -1,44 +1,48 @@
-import Container from './Container'
-import { Resolvable } from './types'
+import { Resolvable, ContainerContract } from './types'
 
-class Binding {
-  protected resolvable: Resolvable
-  public shared: boolean
+interface BindingContract {
+  resolvable: Resolvable
+  shared: boolean
+}
+
+const hasPrototype = (fn: Resolvable) => 'prototype' in fn
+
+class Binding implements BindingContract {
+  resolvable: Resolvable
+  shared: boolean
 
   constructor(resolvable: Resolvable, shared = false) {
     this.shared = shared
     this.resolvable = resolvable
   }
 
-  get injectsDependencies() {
-    return Array.isArray(this.resolvable.injects)
+  resolveInjectables(container: ContainerContract) {
+    if (Array.isArray(this.resolvable.injects)) {
+      return this.resolvable.injects.map((key) => container.get(key))
+    }
+
+    return [container]
   }
 
-  resolveInjectables(container: Container) {
-    return this.resolvable.injects.map((key) => container.get(key))
-  }
-
-  resolve(container: Container, params = []) {
-    if ('prototype' in this.resolvable) {
-      const dependencies = this.injectsDependencies
-        ? this.resolveInjectables(container)
-        : [container]
+  resolve(container: ContainerContract, params: unknown[] = []) {
+    if (hasPrototype(this.resolvable)) {
+      const dependencies = this.resolveInjectables(container)
 
       if (params.length) {
         dependencies.push(...params)
       }
 
-      return new this.resolvable(...dependencies)
+      return Reflect.construct(this.resolvable, dependencies)
     }
 
     return this.resolvable(container, ...params)
   }
 
-  static isResolvable(binding) {
+  static isResolvable(binding: unknown) {
     return typeof binding === 'function'
   }
 
-  static once(resolvable, container, params) {
+  static once(resolvable: Resolvable, container: ContainerContract, params: unknown[]) {
     return new Binding(resolvable).resolve(container, params)
   }
 }

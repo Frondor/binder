@@ -1,5 +1,1 @@
-import Container from './Container'
-
-module.exports = {
-  Container,
-}
+export { default as Container } from './Container'
