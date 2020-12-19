@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Container } from '../src'
 
 // TODO test symbol as key
 class Animal {
+  name: string
   constructor(name) {
     this.name = name
   }
@@ -76,10 +78,11 @@ describe('container', () => {
       // Arrow function
       container.bind(
         'dog',
-        (container, param1, param2) => new Dog(container.get('name') + param1 + param2)
+        (container, param1: string, param2: string) =>
+          new Dog(container.get('name') + param1 + param2)
       )
       // Normal function
-      container.bind('catdog', function (container, param1, param2) {
+      container.bind('catdog', function (container, param1: string, param2: string) {
         return new Dog(container.get('name') + param1 + param2)
       })
       expect(container.make('dog', ' es ', 'lindo').name).toStrictEqual('Rocco es lindo')

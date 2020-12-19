@@ -1,47 +1,52 @@
+/* eslint-disable no-dupe-class-members */
 import Binding from './Binding'
-import { Resolvable } from './types'
+import { ContainerContract, Key, Resolvable } from './types'
 
-export default class Container {
+export default class Container implements ContainerContract {
   protected bindings = new Map()
   protected instances = new Map()
   protected aliases = new Map()
 
-  has(key) {
+  has(key: Key) {
     const alias = this.getAlias(key)
-    return this.#bindings.has(alias) || this.#instances.has(alias)
+    return this.bindings.has(alias) || this.instances.has(alias)
   }
 
-  bind(key, resolvable, shared = false) {
+  bind(
+    key: Key | Resolvable<unknown>,
+    resolvable?: (c: ContainerContract, ...params: unknown[]) => unknown,
+    shared = false
+  ) {
     if (!key) {
       throw new TypeError('First parameter is required')
-    } else if (!resolvable) resolvable = key
+    } else if (!resolvable) resolvable = key as Resolvable<unknown>
 
     if (!Binding.isResolvable(resolvable)) {
       throw new TypeError(`Only functions are bindable, got [${typeof resolvable}]`)
     }
 
-    this.#bindings.set(key, new Binding(resolvable, shared))
+    this.bindings.set(key, new Binding(resolvable, shared))
   }
 
-  resolve(key, params?) {
+  resolve(key: Key, params?: unknown[]) {
     const alias = this.getAlias(key)
     const instance = this.getInstance(alias)
 
     if (instance) return instance
 
-    if (this.#bindings.has(alias)) {
-      const binding = this.#bindings.get(alias)
+    if (this.bindings.has(alias)) {
+      const binding = this.bindings.get(alias)
       const result = binding.resolve(this, params)
 
       if (binding.shared) {
-        this.#instances.set(alias, result)
+        this.instances.set(alias, result)
       }
 
       return result
     }
   }
 
-  make(key, ...params) {
+  make(key: unknown, ...params: unknown[]) {
     const binding = this.resolve(key, params)
 
     if (binding) {
@@ -54,7 +59,7 @@ export default class Container {
   }
 
   get<T>(key: T): T extends new () => infer I ? I : unknown
-  get(key: any) { // eslint-disable-line
+  get(key: unknown) {
     const binding = this.resolve(key)
 
     if (binding) return binding
@@ -62,24 +67,24 @@ export default class Container {
     throw new TypeError(`${key} is not bound`)
   }
 
-  instance(key, value) {
-    this.#instances.set(key, value)
+  instance(key: Key, value: unknown) {
+    this.instances.set(key, value)
   }
 
-  singleton(key, resolvable) {
+  singleton(key: Key, resolvable: Resolvable<unknown>) {
     return this.bind(key, resolvable, true)
   }
 
-  getInstance(key) {
-    return this.#instances.has(key) ? this.#instances.get(key) : null
+  getInstance(key: Key) {
+    return this.instances.has(key) ? this.instances.get(key) : null
   }
 
-  alias(alias, key) {
-    this.#aliases.set(alias, key)
+  alias(alias: unknown, key: Key | Resolvable<unknown>) {
+    this.aliases.set(alias, key)
   }
 
-  getAlias(alias) {
-    const key = this.#aliases.has(alias) ? this.#aliases.get(alias) : null
+  getAlias(alias: unknown) {
+    const key = this.aliases.has(alias) ? this.aliases.get(alias) : null
     return key || alias
   }
 }
