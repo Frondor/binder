@@ -4,7 +4,7 @@ import { Container } from '../src'
 // TODO test symbol as key
 class Animal {
   name: string
-  constructor(name) {
+  constructor(name: string) {
     this.name = name
   }
 }
@@ -39,8 +39,8 @@ describe('container', () => {
   describe('when resolving factories', () => {
     it('should resolve factory: arrow function', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', (container) => new Dog(container.get('name')))
-      const dog = container.get('dog')
+      container.bind('dog', (container) => new Dog(container.get('name') as string))
+      const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
     })
@@ -48,17 +48,17 @@ describe('container', () => {
     it('should resolve factory: non-arrow function', () => {
       container.instance('name', 'Rocco')
       container.bind('dog', function (container) {
-        return new Dog(container.get('name'))
+        return new Dog(container.get('name') as string)
       })
-      const dog = container.get('dog')
+      const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
     })
 
     it('should resolve factory: bound arrow function (edge case)', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', (container) => new Dog(container.get('name')))
-      const dog = container.get('dog')
+      container.bind('dog', (container) => new Dog(container.get('name') as string))
+      const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
     })
@@ -66,9 +66,9 @@ describe('container', () => {
     it('should resolve factory: bound non-arrow function (edge case)', () => {
       container.instance('name', 'Rocco')
       container.bind('dog', function (container) {
-        return new Dog(container.get('name'))
+        return new Dog(container.get('name') as string)
       })
-      const dog = container.get('dog')
+      const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
     })
@@ -78,12 +78,12 @@ describe('container', () => {
       // Arrow function
       container.bind(
         'dog',
-        (container, param1: string, param2: string) =>
-          new Dog(container.get('name') + param1 + param2)
+        (container, param1: unknown, param2: unknown) =>
+          new Dog(container.get('name') + (param1 as string) + param2)
       )
       // Normal function
-      container.bind('catdog', function (container, param1: string, param2: string) {
-        return new Dog(container.get('name') + param1 + param2)
+      container.bind('catdog', function (container, param1: unknown, param2: unknown) {
+        return new Dog(container.get('name') + (param1 as string) + param2)
       })
       expect(container.make('dog', ' es ', 'lindo').name).toStrictEqual('Rocco es lindo')
       expect(container.make('catdog', ' es ', 'feo').name).toStrictEqual('Rocco es feo')

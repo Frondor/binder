@@ -25,7 +25,8 @@
     "lint:fix": "npm run lint -- --fix",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.js",
-    "test": "jest --coverage",
+    "test:ci": "jest --coverage",
+    "test": "jest",
     "preversion": "git merge origin/master && git push -u origin HEAD && npm ci && npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags"
   },
