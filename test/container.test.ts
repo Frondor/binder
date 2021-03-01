@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Container } from '../src'
 
-// TODO test symbol as key
 class Animal {
   name: string
   constructor(name: string) {
