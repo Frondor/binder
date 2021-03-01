@@ -39,7 +39,7 @@ describe('container', () => {
   describe('when resolving factories', () => {
     it('should resolve factory: arrow function', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', (container) => new Dog(container.get('name') as string))
+      container.bind('dog', (container: Container) => new Dog(container.get('name') as string))
       const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
@@ -47,7 +47,7 @@ describe('container', () => {
 
     it('should resolve factory: non-arrow function', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', function (container) {
+      container.bind('dog', function (container: Container) {
         return new Dog(container.get('name') as string)
       })
       const dog = container.get('dog') as Dog
@@ -57,7 +57,7 @@ describe('container', () => {
 
     it('should resolve factory: bound arrow function (edge case)', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', (container) => new Dog(container.get('name') as string))
+      container.bind('dog', (container: Container) => new Dog(container.get('name') as string))
       const dog = container.get('dog') as Dog
       expect(dog).toBeInstanceOf(Dog)
       expect(dog.name).toStrictEqual('Rocco')
@@ -65,7 +65,7 @@ describe('container', () => {
 
     it('should resolve factory: bound non-arrow function (edge case)', () => {
       container.instance('name', 'Rocco')
-      container.bind('dog', function (container) {
+      container.bind('dog', function (container: Container) {
         return new Dog(container.get('name') as string)
       })
       const dog = container.get('dog') as Dog
@@ -78,11 +78,11 @@ describe('container', () => {
       // Arrow function
       container.bind(
         'dog',
-        (container, param1: unknown, param2: unknown) =>
+        (container: Container, param1: unknown, param2: unknown) =>
           new Dog(container.get('name') + (param1 as string) + param2)
       )
       // Normal function
-      container.bind('catdog', function (container, param1: unknown, param2: unknown) {
+      container.bind('catdog', function (container: Container, param1: unknown, param2: unknown) {
         return new Dog(container.get('name') + (param1 as string) + param2)
       })
       expect(container.make('dog', ' es ', 'lindo').name).toStrictEqual('Rocco es lindo')
@@ -99,7 +99,7 @@ describe('container', () => {
     })
 
     it('factory: should always return the same instance', () => {
-      container.singleton(Animal, () => new Dog())
+      container.singleton(Animal, () => new Dog(''))
       const dog1 = container.get(Animal)
       const dog2 = container.get(Animal)
       expect(dog1).toStrictEqual(dog2)
@@ -108,7 +108,7 @@ describe('container', () => {
 
   describe('when binding instances', () => {
     it('should always get() the same reference', () => {
-      container.instance(Animal, new Dog())
+      container.instance(Animal, new Dog(''))
       const dog1 = container.get(Animal)
       const dog2 = container.get(Animal)
       expect(dog1).toStrictEqual(dog2)
@@ -123,24 +123,24 @@ describe('container', () => {
     })
 
     it('should override singletons bindings', () => {
-      container.singleton(Animal, () => new Dog())
-      container.singleton(Animal, () => new Cat())
+      container.singleton(Animal, () => new Dog(''))
+      container.singleton(Animal, () => new Cat(''))
       expect(container.get(Animal)).toBeInstanceOf(Cat)
     })
 
     it('should override factory bindings', () => {
-      container.bind(Animal, () => new Dog())
+      container.bind(Animal, () => new Dog(''))
       container.bind(Animal, function () {
-        return new Cat()
+        return new Cat('')
       })
       expect(container.get(Animal)).toBeInstanceOf(Cat)
-      container.bind(Animal, () => new Dog())
+      container.bind(Animal, () => new Dog(''))
       expect(container.get(Animal)).toBeInstanceOf(Dog)
     })
 
     it('should override instance bindings', () => {
-      container.instance(Animal, new Dog())
-      container.instance(Animal, new Cat())
+      container.instance(Animal, new Dog(''))
+      container.instance(Animal, new Cat(''))
       expect(container.get(Animal)).toBeInstanceOf(Cat)
     })
   })
@@ -163,7 +163,7 @@ describe('container', () => {
   describe('when passing params', () => {
     it('should resolve class with params', () => {
       class DogWrapper extends Dog {
-        constructor(container, name) {
+        constructor(container: Container, name: string) {
           super(name)
         }
       }
@@ -173,33 +173,39 @@ describe('container', () => {
     })
 
     it('should resolve factory with params', () => {
-      container.bind(Dog, (container, name = 'Milo') => new Dog(name))
-      expect(container.get(Dog).name).toBe('Milo')
+      container.bind(Dog, (container: Container, name = 'Milo') => new Dog(name))
+      expect((container.get(Dog) as Dog).name).toBe('Milo')
       expect(container.make(Dog).name).toBe('Milo')
       expect(container.make(Dog, 'Rocco').name).toBe('Rocco')
     })
 
     it('should receive container as only param if the class does not injects dependencies', () => {
       class ContainerWrapper {
-        constructor(container) {
+        theContainer: Container
+        constructor(container: Container) {
           this.theContainer = container
         }
       }
 
       class ClassWithDependencies {
+        container: Container
         static get injects() {
           return [ContainerWrapper]
         }
 
-        constructor({ theContainer }) {
-          this.container = theContainer
+        constructor(wrapper: ContainerWrapper) {
+          this.container = wrapper.theContainer
         }
       }
 
       container.bind(ContainerWrapper)
       container.bind(ClassWithDependencies)
-      expect(container.get(ContainerWrapper).theContainer === container).toBe(true)
-      expect(container.get(ClassWithDependencies).container === container).toBe(true)
+      expect((container.get(ContainerWrapper) as ContainerWrapper).theContainer === container).toBe(
+        true
+      )
+      expect(
+        (container.get(ClassWithDependencies) as ClassWithDependencies).container === container
+      ).toBe(true)
     })
   })
 
@@ -230,7 +236,7 @@ describe('container errors', () => {
   const container = new Container()
 
   it('should throw if a bind() is called without a key', () => {
-    expect(() => container.bind()).toThrow('First parameter is required')
+    expect(() => container.bind(undefined)).toThrow('First parameter is required')
   })
 
   it('should throw if bind() receives a non-resolvable parameter', () => {

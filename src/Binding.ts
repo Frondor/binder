@@ -1,30 +1,31 @@
-import { Resolvable, ContainerContract } from './types'
+import { Container } from '.'
+import { Resolvable } from './types'
 
 interface BindingContract {
-  resolvable: Resolvable
+  resolvable: Resolvable<unknown>
   shared: boolean
 }
 
-const hasPrototype = (fn: Resolvable) => 'prototype' in fn
+const hasPrototype = (fn: Resolvable<unknown>) => 'prototype' in fn
 
 class Binding implements BindingContract {
-  resolvable: Resolvable
+  resolvable: Resolvable<unknown>
   shared: boolean
 
-  constructor(resolvable: Resolvable, shared = false) {
+  constructor(resolvable: Resolvable<unknown>, shared = false) {
     this.shared = shared
-    this.resolvable = resolvable
+    this.resolvable = resolvable as Resolvable<unknown>
   }
 
-  resolveInjectables(container: ContainerContract) {
+  resolveInjectables(container: Container) {
     if (Array.isArray(this.resolvable.injects)) {
-      return this.resolvable.injects.map((key) => container.get(key))
+      return this.resolvable.injects.map((key: unknown) => container.get(key))
     }
 
     return [container]
   }
 
-  resolve(container: ContainerContract, params: unknown[] = []) {
+  resolve(container: Container, params: unknown[] = []) {
     if (hasPrototype(this.resolvable)) {
       const dependencies = this.resolveInjectables(container)
 
@@ -32,7 +33,7 @@ class Binding implements BindingContract {
         dependencies.push(...params)
       }
 
-      return Reflect.construct(this.resolvable, dependencies)
+      return Reflect.construct(this.resolvable as Resolvable<unknown>, dependencies)
     }
 
     return this.resolvable(container, ...params)
@@ -42,7 +43,7 @@ class Binding implements BindingContract {
     return typeof binding === 'function'
   }
 
-  static once(resolvable: Resolvable, container: ContainerContract, params: unknown[]) {
+  static once(resolvable: Resolvable<unknown>, container: Container, params: unknown[]) {
     return new Binding(resolvable).resolve(container, params)
   }
 }

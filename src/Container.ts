@@ -1,8 +1,8 @@
 /* eslint-disable no-dupe-class-members */
 import Binding from './Binding'
-import { ContainerContract, Key, Resolvable } from './types'
+import { Key, Resolvable } from './types'
 
-export default class Container implements ContainerContract {
+export default class Container {
   protected bindings = new Map()
   protected instances = new Map()
   protected aliases = new Map()
@@ -12,20 +12,17 @@ export default class Container implements ContainerContract {
     return this.bindings.has(alias) || this.instances.has(alias)
   }
 
-  bind(
-    key: Key | Resolvable<unknown>,
-    resolvable?: (c: ContainerContract, ...params: unknown[]) => unknown,
-    shared = false
-  ) {
+  bind(key: Key | Resolvable<unknown>, resolvable?: unknown | Resolvable<unknown>, shared = false) {
     if (!key) {
       throw new TypeError('First parameter is required')
     } else if (!resolvable) resolvable = key as Resolvable<unknown>
 
-    if (!Binding.isResolvable(resolvable)) {
-      throw new TypeError(`Only functions are bindable, got [${typeof resolvable}]`)
+    if (Binding.isResolvable(resolvable)) {
+      this.bindings.set(key, new Binding(resolvable as Resolvable<unknown>, shared))
+      return this
     }
 
-    this.bindings.set(key, new Binding(resolvable, shared))
+    throw new TypeError(`Only functions are bindable, got [${typeof resolvable}]`)
   }
 
   resolve(key: Key, params?: unknown[]) {
@@ -52,14 +49,15 @@ export default class Container implements ContainerContract {
     if (binding) {
       return binding
     } else if (Binding.isResolvable(key)) {
-      return Binding.once(key, this, params)
+      return Binding.once(key as Resolvable<unknown>, this, params)
     }
 
     throw new TypeError(`Can not resolve anything for ${key}`)
   }
 
+  get<T extends new (...p: any[]) => InstanceType<T>>(key: T): InstanceType<T>
   get<T>(key: T): T extends new () => infer I ? I : unknown
-  get(key: unknown) {
+  get(key: unknown): unknown {
     const binding = this.resolve(key)
 
     if (binding) return binding
@@ -71,7 +69,7 @@ export default class Container implements ContainerContract {
     this.instances.set(key, value)
   }
 
-  singleton(key: Key, resolvable: Resolvable<unknown>) {
+  singleton(key: Key, resolvable: unknown) {
     return this.bind(key, resolvable, true)
   }
 
