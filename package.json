@@ -23,7 +23,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "npm run lint -- --cache --fix",
     "build": "microbundle src/index.ts",
     "test:ci": "jest --coverage",
     "test": "jest",
@@ -64,6 +64,9 @@
   },
   "homepage": "https://github.com/Frondor/binder#readme",
   "lint-staged": {
-    "*.{js,ts}": "eslint --cache --fix"
+    "*.{js,ts}": [
+      "npx --no-install prettier src/**/* --write",
+      "npm run lint -- --fix"
+    ]
   }
 }

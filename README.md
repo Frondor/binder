@@ -13,9 +13,6 @@
   <a href="https://bundlephobia.com/result?p=binder@latest">
     <img src="https://img.shields.io/bundlephobia/minzip/binder.svg" alt="Package size">
   </a>
-  <a href="https://greenkeeper.io/">
-    <img src="https://badges.greenkeeper.io/Frondor/binder.svg" alt="Greenkeeper badge">
-  </a>
   <a href="https://snyk.io/test/npm/binder">
     <img src="https://snyk.io/test/npm/binder/badge.svg" alt="Known Vulnerabilities">
   </a>
