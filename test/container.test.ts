@@ -217,7 +217,6 @@ describe('container', () => {
 
   describe('when binding resolvables', () => {
     it('should accept any primitive as the key', () => {
-      container.bind(Dog)
       container.bind('dog', Dog)
       const dogObj = {}
       container.bind(dogObj, Dog)

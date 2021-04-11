@@ -8,9 +8,10 @@
     "service-locator",
     "inversion-of-control"
   ],
-  "main": "dist/binder.umd.js",
-  "module": "dist/binder.es5.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/binder.js",
+  "exports": "./dist/binder.modern.js",
+  "module": "dist/binder.module.js",
+  "unpkg": "dist/binder.umd.js",
   "sideEffects": false,
   "files": [
     "dist"
@@ -23,45 +24,36 @@
   "scripts": {
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
-    "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.js",
+    "build": "microbundle src/index.ts",
     "test:ci": "jest --coverage",
     "test": "jest",
     "preversion": "git merge origin/master && git push -u origin HEAD && npm ci && npm run lint && npm run build && npm test",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "micro": "microbundle ./src/index.ts"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "15.1.0",
-    "@rollup/plugin-json": "4.1.0",
-    "@rollup/plugin-node-resolve": "9.0.0",
-    "@types/jest": "26.0.15",
-    "@types/lodash": "4.14.162",
-    "@types/node": "14.14.2",
-    "@typescript-eslint/eslint-plugin": "4.5.0",
-    "@typescript-eslint/parser": "4.5.0",
-    "eslint": "7.12.0",
-    "eslint-config-prettier": "6.14.0",
-    "eslint-config-standard": "15.0.0",
+    "@types/jest": "26.0.22",
+    "@types/node": "14.14.37",
+    "@typescript-eslint/eslint-plugin": "4.21.0",
+    "@typescript-eslint/parser": "4.21.0",
+    "eslint": "7.24.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-config-standard": "16.0.2",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jest": "24.1.0",
+    "eslint-plugin-jest": "24.3.5",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "3.1.4",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.2",
-    "husky": "4.3.0",
-    "jest": "26.6.1",
-    "jest-config": "26.6.1",
-    "lint-staged": "10.4.2",
-    "prettier": "2.1.2",
-    "rimraf": "3.0.2",
-    "rollup": "2.32.1",
-    "rollup-plugin-bundle-size": "1.0.3",
-    "rollup-plugin-sourcemaps": "0.6.3",
-    "rollup-plugin-terser": "7.0.2",
-    "rollup-plugin-typescript2": "0.28.0",
-    "ts-jest": "26.4.2",
-    "ts-node": "9.0.0",
-    "typescript": "4.0.3"
+    "eslint-plugin-prettier": "3.3.1",
+    "eslint-plugin-promise": "5.1.0",
+    "eslint-plugin-standard": "4.1.0",
+    "husky": "6.0.0",
+    "jest": "26.6.3",
+    "jest-config": "26.6.3",
+    "lint-staged": "10.5.4",
+    "microbundle": "0.13.0",
+    "prettier": "2.2.1",
+    "ts-jest": "26.5.4",
+    "ts-node": "9.1.1",
+    "typescript": "4.2.4"
   },
   "repository": {
     "type": "git",
@@ -71,11 +63,6 @@
     "url": "https://github.com/Frondor/binder/issues"
   },
   "homepage": "https://github.com/Frondor/binder#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix"
   }
