@@ -14,7 +14,6 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:jest/all',
     'prettier',
-    'prettier/@typescript-eslint',
   ],
   plugins: ['@typescript-eslint', 'jest', 'standard', 'prettier'],
   globals: {
