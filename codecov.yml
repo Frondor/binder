@@ -3,10 +3,10 @@ coverage:
     project:
       default:
         target: 100%
-        paths: 
-          - "src"
+        paths:
+          - 'src'
     patch:
       default:
         target: 100%
-        paths: 
-          - "src"
+        paths:
+          - 'src'

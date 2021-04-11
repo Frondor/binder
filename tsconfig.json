@@ -16,5 +16,5 @@
     "declarationDir": "dist/types",
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src/**/*.ts", "src/.d.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"]
 }

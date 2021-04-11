@@ -41,12 +41,14 @@ Run
 It's pretty simple, you only need to create an instance of the [ServiceContainer](src/ServiceContainer.js) class and `import` it whenever you need.
 
 ```js
-import Binder from "binder";
-const container = new Binder();
+import Binder from 'binder'
+const container = new Binder()
 ```
+
 ## Recipes
 
-Here are some recipes you can use to see which kind of *powerful* things you can do this
+Here are some recipes you can use to see which kind of _powerful_ things you can do this
+
 - [Use webpack's require.context to auto-load configuration files](https://gist.github.com/Frondor/122607d4df80b0659ae66489c0872e58)
 - [TO-DO] Auto-load files in Node, and let the container resolve its services (service loader)
 
@@ -59,9 +61,9 @@ Registers a service/object into the container, passing a function that will be c
 Example:
 
 ```js
-container.bind("UserController", ({ auth }) => {
-  return new UserController(auth);
-});
+container.bind('UserController', ({ auth }) => {
+  return new UserController(auth)
+})
 ```
 
 ### `container.instance(string: key, any: instance)`
@@ -71,7 +73,7 @@ Registers an existing object instance into the container, that will always be re
 Example:
 
 ```js
-container.instance("config", new ConfigStore());
+container.instance('config', new ConfigStore())
 ```
 
 ### <code>container.singleton(string: key, <a href="#resolver-function">Function: resolver</a>)</code>
@@ -81,7 +83,7 @@ Just like `bind`, but the resolver function creates the object instance once, an
 Example:
 
 ```js
-container.singleton("cache", () => new CacheStore());
+container.singleton('cache', () => new CacheStore())
 ```
 
 ### `container.get(string: key, Array: arguments?)`
@@ -93,8 +95,8 @@ Pass an array of parameters as second argument to provide the binding's resolver
 Example:
 
 ```js
-container.bind("storage", (_, args) => new StorageDriver(...args));
-container.get("storage", ["session"]);
+container.bind('storage', (_, args) => new StorageDriver(...args))
+container.get('storage', ['session'])
 ```
 
 ### `container.injector`
@@ -105,8 +107,8 @@ It uses property accesors to resolve its properties directly from the container 
 Example:
 
 ```js
-const { cache } = container.injector;
-container.get("cache") === cache; // cache is a singleton
+const { cache } = container.injector
+container.get('cache') === cache // cache is a singleton
 ```
 
 Dependency Injection outside the container:
@@ -114,19 +116,16 @@ Dependency Injection outside the container:
 ```js
 class UsersController {
   constructor({ db }) {
-    this.db = db;
+    this.db = db
   }
 
   async getUser(req) {
-    return await this.db
-      .select("*")
-      .from("users")
-      .where("id", req.params.id);
+    return await this.db.select('*').from('users').where('id', req.params.id)
   }
 }
 
-const controller = new UsersController(container.injector);
-app.get("/user/:id", controller.getUser);
+const controller = new UsersController(container.injector)
+app.get('/user/:id', controller.getUser)
 ```
 
 ### `resolver` function

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Container } from '../src'
 
 class Animal {
@@ -29,6 +28,7 @@ describe('container', () => {
     })
 
     it('should resolve function-like classes', () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       const LegacyClass = function () {}
       container.bind(LegacyClass)
       expect(container.get(LegacyClass)).toBeInstanceOf(LegacyClass)
