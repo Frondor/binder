@@ -21,119 +21,126 @@
 Simple, yet powerful IoC container and service locator for both, the browser and node.
 Inspired by [Illuminate/Container](https://github.com/illuminate/container).
 
-## Table of contents
-
-1. [Installation](#installation)
-2. [Getting started](#getting-started)
-3. [Recipes](#recipes)
-4. [API](#api)
-
 ## Installation
 
-Run
+NPM users:
 
 ```console
 > npm i binder
 ```
+YARN users: 
 
-## Getting started
-
-It's pretty simple, you only need to create an instance of the [ServiceContainer](src/ServiceContainer.js) class and `import` it whenever you need.
-
-```js
-import Binder from 'binder'
-const container = new Binder()
+```console
+> yarn add binder
 ```
 
-## Recipes
+## Usage
 
-Here are some recipes you can use to see which kind of _powerful_ things you can do this
+While we miss a documentation website for this, you can simply check out the following example.
 
-- [Use webpack's require.context to auto-load configuration files](https://gist.github.com/Frondor/122607d4df80b0659ae66489c0872e58)
-- [TO-DO] Auto-load files in Node, and let the container resolve its services (service loader)
-
-## API
-
-### <code>container.bind(string: key, <a href="#resolver-function">Function: resolver</a>)</code>
-
-Registers a service/object into the container, passing a function that will be called whenever the service is requested or ["injected"](#containerinjector), resolving a new instance of the given class each time.
-
-Example:
+You can also refer to the [test cases](test/container.test.ts) and the [Container](src/Container.ts) API, which is pretty easy 
 
 ```js
-container.bind('UserController', ({ auth }) => {
-  return new UserController(auth)
-})
-```
+import { Container } from 'binder'
+const container = new Container()
 
-### `container.instance(string: key, any: instance)`
-
-Registers an existing object instance into the container, that will always be returned on subsequent calls.
-
-Example:
-
-```js
-container.instance('config', new ConfigStore())
-```
-
-### <code>container.singleton(string: key, <a href="#resolver-function">Function: resolver</a>)</code>
-
-Just like `bind`, but the resolver function creates the object instance once, and then always return the same instance on subsequent calls.
-
-Example:
-
-```js
-container.singleton('cache', () => new CacheStore())
-```
-
-### `container.get(string: key, Array: arguments?)`
-
-Resolve and return registered bindings from the container.
-
-Pass an array of parameters as second argument to provide the binding's resolver function with.
-
-Example:
-
-```js
-container.bind('storage', (_, args) => new StorageDriver(...args))
-container.get('storage', ['session'])
-```
-
-### `container.injector`
-
-This object is passed as the first argument of every resolver function, but you can use it whenever you want to implement Dependency Injection.
-It uses property accesors to resolve its properties directly from the container (internally calling `container.get(...)`), and throw an error if they are not registered.
-
-Example:
-
-```js
-const { cache } = container.injector
-container.get('cache') === cache // cache is a singleton
-```
-
-Dependency Injection outside the container:
-
-```js
-class UsersController {
-  constructor({ db }) {
-    this.db = db
-  }
-
-  async getUser(req) {
-    return await this.db.select('*').from('users').where('id', req.params.id)
+class User {
+  constructor({ email, password }) {
+    this.email = email.toLowerCase().trim()
+    this.password = password.trim()
   }
 }
 
-const controller = new UsersController(container.injector)
-app.get('/user/:id', controller.getUser)
+/**
+ * This class is bound to the container using a factory function
+ * that passes a Connection object as its dependency 
+ */
+class UserRepository {
+  constructor(connection) {
+    this.db = connection;
+  }
+
+  async create({ email, password }) {
+    const user = new User({ email, password })
+    UserRepository.validate(user)
+
+    return this.db.insert(user.toJSON())
+  }
+
+  async findById(id) {
+    const user = await this.db.select('email', 'password').where({ id })
+
+    if (user) return new User(user)
+
+    return null
+  }
+
+  static validate({ email, password }) {
+    if (!email) throw new TypeError('Email is required')
+    if (!password) throw new TypeError('Password is required')
+  }
+}
+
+/**
+ * This class is directly bound to the container, which injects itself
+ * as the first param whenever the class is resolved. 
+ */
+class UserController {
+  constructor(container) {
+    // UserRepository is resolved by reference, so we have intellisense support!
+    this.userRepo = containger.get(UserRepository)
+  }
+
+  // Simple handler for an express route, using the controller's instance
+  async createUser(req, res) {
+    const { email, password } = req.body;
+    try {
+      const user = await this.userRepo.create({ email, password })
+      res.send({ user })
+    } catch (err) {
+      const { stack, ...error } = err
+      res.status(400).send({ error })
+    }
+  }
+
+  async getUser(req, res) {
+    const { id } = req.body;
+    try {
+      const user = await this.userRepo.findById(id)
+      if (user === null) {
+        throw Object.assign(new Error(`User ${id} not found`), { status: 404 })
+      }
+
+      res.send({ user })
+    } catch (err) {
+      const { stack, status = 500, ...error } = err
+      res.status(status).send({ error })
+    }
+  }
+}
+
+/**
+ * We want to share the same instance of UserRepository, 
+ * hence we bind it as a singleton, otherwise we'd use .bind()
+ * 
+ * We can provide a factory function as the second param
+ * to resolve its dependencies (also from the container).
+ */
+container.singleton(UserRepository, (container, tableName) => {
+  const connection = container.get('db').table(tableName)
+  return new UserRepository(connection)
+})
+
+/**
+ * Because UserController depends directly on the Container,
+ * we can simply pass its class to either .get() or .make() methods.
+ * The Container will know how to resolve and return an instance of it
+ */
+container.singleton(UserController)
+
+// Example usage with an Express application (you may want to use a middleware instead)
+app.post('/users', (req, res) => container.get(UserController).createUser(req, res))
+app.post('/users/:id', (req, res) => container.get(UserController).getUser(req, res))
+
 ```
 
-### `resolver` function
-
-The resolver function instructs the container on how to create an object, returning a new instance of it.
-
-Note that it receives the [`container.injector`](#containerinjector) as the first argument, so we can then use the container to resolve sub-dependencies of the object we are building, and an optional array of params as second argument (see `container.get`).
-
-## Thanks
-
-Special thanks to @rodnaph for transferring to me the ownership of "binder" name, in npm.
