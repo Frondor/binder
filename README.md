@@ -126,8 +126,8 @@ class UserController {
  * We can provide a factory function as the second param
  * to resolve its dependencies (also from the container).
  */
-container.singleton(UserRepository, (container, tableName) => {
-  const connection = container.get('db').table(tableName)
+container.singleton(UserRepository, (container) => {
+  const connection = container.get('db').table('users')
   return new UserRepository(connection)
 })
 
