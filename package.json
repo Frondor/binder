@@ -1,46 +1,72 @@
 {
   "name": "binder",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Simple, yet powerful IoC container and service locator for both, the browser and node.",
-  "private": false,
-  "main": "dist/binder.node.js",
-  "browser": "dist/binder.js",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "webpack --config build/webpack.prod.js",
-    "test": "jest",
-    "coverage": "npm run test -- --coverage",
-    "prepublishOnly": "npm test && npm run build"
-  },
-  "author": {
-    "name": "Federico Vázquez (Frondor)",
-    "url": "https://frondor.github.io"
-  },
-  "repository": "https://github.com/Frondor/binder",
-  "homepage": "https://github.com/Frondor/binder#readme",
-  "license": "MIT",
-  "sideEffects": false,
-  "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
-    "babel-loader": "^8.0.4",
-    "clean-webpack-plugin": "^1.0.0",
-    "jest": "^23.6.0",
-    "webpack": "^4.28.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-merge": "^4.1.5"
-  },
-  "engines": {
-    "node": ">= 8"
-  },
   "keywords": [
     "ioc",
     "dependency-injection",
     "service-locator",
     "inversion-of-control"
-  ]
+  ],
+  "main": "dist/binder.js",
+  "exports": "./dist/binder.modern.js",
+  "module": "dist/binder.module.js",
+  "unpkg": "dist/binder.umd.js",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "author": "Federico Vázquez <frondor.dev@gmail.com> (frondor.github.io)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.13.0"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .js,.ts --cache --fix",
+    "prettier:fix": "prettier 'src' 'test' --write",
+    "build": "microbundle src/index.ts",
+    "test:ci": "jest --coverage",
+    "test": "jest",
+    "preversion": "git merge origin/master && git push -u origin HEAD && npm ci && npm run lint && npm run build && npm test",
+    "postversion": "git push && git push --tags",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/jest": "26.0.22",
+    "@types/node": "14.14.37",
+    "@typescript-eslint/eslint-plugin": "4.21.0",
+    "@typescript-eslint/parser": "4.21.0",
+    "eslint": "7.24.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-config-standard": "16.0.2",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jest": "24.3.5",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "3.3.1",
+    "eslint-plugin-promise": "5.1.0",
+    "eslint-plugin-standard": "4.1.0",
+    "husky": "6.0.0",
+    "jest": "26.6.3",
+    "jest-config": "26.6.3",
+    "lint-staged": "10.5.4",
+    "microbundle": "0.13.0",
+    "prettier": "2.2.1",
+    "ts-jest": "26.5.4",
+    "ts-node": "9.1.1",
+    "typescript": "4.2.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frondor/binder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Frondor/binder/issues"
+  },
+  "homepage": "https://github.com/Frondor/binder#readme",
+  "lint-staged": {
+    "*.{js,ts}": [
+      "npm run prettier:fix",
+      "npm run lint"
+    ]
+  }
 }
