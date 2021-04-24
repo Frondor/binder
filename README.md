@@ -62,7 +62,7 @@ class UserRepository {
 
   async create({ email, password }) {
     const user = new User({ email, password })
-    UserRepository.validate(user)
+    await UserRepository.validate(user)
 
     return this.db.insert(user.toJSON())
   }
