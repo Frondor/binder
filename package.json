@@ -15,7 +15,7 @@
   },
   "module": "dist/binder.module.js",
   "unpkg": "dist/binder.umd.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types",
   "sideEffects": false,
   "files": [
     "dist"
@@ -26,7 +26,7 @@
     "node": ">=10.13.0"
   },
   "scripts": {
-    "lint": "eslint . --ext .js,.ts --cache --fix",
+    "lint": "eslint src/**/*.ts --cache --fix",
     "prettier:fix": "prettier --write src",
     "build": "microbundle src/index.ts",
     "test:ci": "jest",
@@ -67,7 +67,7 @@
   },
   "homepage": "https://github.com/Frondor/binder#readme",
   "lint-staged": {
-    "*.{js,ts}": [
+    "src/**/*.{js,ts}": [
       "npm run prettier:fix",
       "npm run lint"
     ]
