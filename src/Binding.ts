@@ -1,5 +1,5 @@
 import { Container } from '.'
-import { Resolvable } from './types'
+import { Resolvable } from './types.d'
 
 interface BindingContract {
   resolvable: Resolvable<unknown>

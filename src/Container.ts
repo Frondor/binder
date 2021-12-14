@@ -1,6 +1,6 @@
 /* eslint-disable no-dupe-class-members */
 import Binding from './Binding'
-import { Key, Resolvable } from './types'
+import { Key, Resolvable } from './types.d'
 
 export default class Container {
   protected bindings = new Map()

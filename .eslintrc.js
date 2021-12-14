@@ -15,7 +15,7 @@ module.exports = {
     'plugin:jest/all',
     'prettier',
   ],
-  plugins: ['@typescript-eslint', 'jest', 'standard', 'prettier'],
+  plugins: ['@typescript-eslint', 'jest', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
