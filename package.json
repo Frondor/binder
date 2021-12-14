@@ -1,6 +1,6 @@
 {
   "name": "binder",
-  "version": "2.0.4-beta2",
+  "version": "2.0.5",
   "description": "Simple, yet powerful IoC container and service locator for both, the browser and node.",
   "keywords": [
     "ioc",
