@@ -15,7 +15,7 @@
   },
   "module": "dist/binder.module.js",
   "unpkg": "dist/binder.umd.js",
-  "types": "dist/types",
+  "typings": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "dist"
@@ -31,7 +31,7 @@
     "build": "microbundle src/index.ts",
     "test:ci": "jest",
     "test": "jest",
-    "preversion": "git merge origin/master && git push -u origin HEAD && npm ci && npm run lint && npm run build && npm test",
+    "preversion": "git merge origin/master && git push -u origin HEAD && npm ci && npm run lint && npm run build && npm test:ci",
     "postversion": "git push && git push --tags",
     "prepare": "husky install"
   },
